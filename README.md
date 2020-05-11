@@ -1,5 +1,7 @@
 [![][ButlerImage]][website] 
 
+This fork version support for Japanese Localization.
+
 # About
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/jenkins/jenkins.svg)](https://hub.docker.com/r/jenkins/jenkins/)

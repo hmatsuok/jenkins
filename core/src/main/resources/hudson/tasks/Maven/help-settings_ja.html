@@ -1,0 +1,19 @@
+<div>
+    <code>settings.xml</code>ファイルの設定要素には、<code>pom.xml</code>のようなさまざまな方法で
+    Maven実行を構成する値を定義するために使用される要素が含まれています。
+    ただし、特定のプロジェクトにバンドルしたり、対象ユーザーに配布したりしないでください。
+    これらには、ローカルリポジトリの場所、代替リモートリポジトリサーバー、認証情報などの値が含まれます。
+    <br>
+    デフォルトで<code>settings.xml</code>ファイルが存在する場所は2つあります。
+
+    <ul>
+        <li>Mavenのインストール - デフォルト: <code>$M2_HOME/conf/settings.xml</code></li>
+        <li>ユーザーのインストール  - デフォルト: <code>${user.home}/.m2/settings.xml</code></li>
+    </ul>
+
+    前者のsettings.xmlはグローバル設定とも呼ばれ、後者のsettings.xmlはユーザー設定と呼ばれます。
+    両方のファイルが存在する場合は、それらの内容がマージされ、
+    ユーザー固有のsettings.xmlが支配的です。
+    <p>
+        参照: <a href="http://maven.apache.org/settings.html"><code>settings.xml</code>参照</a>
+</div>

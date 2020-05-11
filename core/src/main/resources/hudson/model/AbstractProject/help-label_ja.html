@@ -1,0 +1,122 @@
+<div>
+    このプロジェクトのビルドを実行できるエージェントを決定する論理式を定義します。
+    この式は、使用可能な各エージェントの名前とラベルに対してテストされると、<i>true</i>
+    または<i>false</i>になります。
+    式の評価が<i>true</i>の場合、そのエージェントはこのプロジェクトのビルドを実行できます。
+    <p>
+        このプロジェクトを常に特定のエージェントまたはJenkinsマスターで構築する必要がある場合
+        は、エージェントの名前または<code>マスター</code>をそれぞれ入力するだけで済みます。
+    <p>
+        ただし、ここでは通常、エージェントの<i>名前</i>の使用を避け、エージェントの<i>ラベル</i>
+        をターゲットにすることをお勧めします。
+        エージェントの<i>ラベル</i>をターゲットにすることを好む。
+        各エージェントの構成ページとマスターの[<i>システムの構成</i>]ページに記載されているように、
+        ラベルを使用して、エージェントが実行されているオペレーティングシステム、そのCPUアーキテクチャ、
+        またはその他の任意の数を表すことができます。
+        <br>
+        ラベルを使用すると、エージェントを追加、削除、または名前変更するたびに、ここに入力された
+        ラベル式を再構成する必要がなくなります。
+    <p>
+        ラベル式は、単一の<b>ラベル</b>または<b>エージェント名</b>を入力するだけの簡単なものにすることが
+        できます（例：<code>android-builder</code>または<code>linux-machine-42</code>)<br>
+        さまざまな<i>演算子</i>を使用して、より複雑な式を作成することもできます。
+
+    <h3>サポートされている演算子</h3>
+    次の演算子が優先順位の高い順にサポートされています。
+    <dl>
+        <dt><tt>(expression)</tt></dt>
+        <dd>
+            parentheses — 式の結合性を明示的に定義するために使用されます
+        </dd>
+
+        <dt><tt>!expression</tt></dt>
+        <dd>
+            NOT — 否定 <tt>expression</tt>の結果は<b>真ではない</b>
+        </dd>
+
+        <dt><tt>a &amp;&amp; b</tt></dt>
+        <dd>
+            AND — <tt>a</tt>と<tt>b</tt>の<b>両方</b>が真
+        </dd>
+
+        <dt><tt>a || b</tt></dt>
+        <dd>
+            OR — <tt>a</tt>または<tt>b</tt>の<b>いずれか</b>が真であると真
+        </dd>
+
+        <dt><tt>a -> b</tt></dt>
+        <dd>
+            "implies" 演算子 — <tt>!a || b</tt>と同じ意味<br>
+            たとえば、<tt>windows -> x64</tt>は、「Windowsエージェントが使用されている場合、
+            そのエージェントは64ビットである<i>必要</i>があります。
+            このプロジェクトを<i>持っていない</i>エージェントで実行できるようにする<tt>windows</tt>
+            ラベル、<tt>x64</tt>ラベル
+        </dd>
+
+        <dt><tt>a &lt;-> b</tt></dt>
+        <dd>
+            "if and only if" 演算子 — <tt>a &amp;&amp; b ||
+            !a &amp;&amp; !b</tt>と同じ意味<br>
+            For example, <tt>windows &lt;-> dc2</tt> could be thought of as "if a
+            Windows agent is used, then that agent <i>must</i> be in datacenter 2, but
+            if a non-Windows agent is used, then it <i>must not</i> be in datacenter
+            2"
+        </dd>
+    </dl>
+
+    <h3>Notes</h3>
+    <ul>
+        <li>
+            All operators are left-associative, i.e. <tt>a -> b -> c</tt> is
+            equivalent to <tt>(a -> b) -> c</tt>.
+        </li>
+        <li>
+            Labels or agent names can be surrounded with quotation marks if they
+            contain characters that would conflict with the operator syntax.<br>
+            For example, <tt>"osx (10.11)" || "Windows Server"</tt>.
+        </li>
+        <li>
+            Expressions can be written without whitespace, but including it is
+            recommended for readability; Jenkins will ignore whitespace when
+            evaluating expressions.
+        </li>
+        <li>
+            Matching labels or agent names with wildcards or regular expressions is
+            not supported.
+        </li>
+        <li>
+            An empty expression will always evaluate to <i>true</i>, matching all
+            agents.
+        </li>
+    </ul>
+
+    <h3>Examples</h3>
+    <dl>
+        <dt><tt>master</tt></dt>
+        <dd>Builds of this project may be executed only on the Jenkins master<dd>
+
+        <dt><tt>linux-machine-42</tt></dt>
+        <dd>
+            Builds of this project may be executed only on the agent with the name
+            <tt>linux-machine-42</tt> (or on any machine that happens to have a label
+            called <tt>linux-machine-42</tt>)
+        </dd>
+
+        <dt><tt>windows &amp;&amp; jdk9</tt></dt>
+        <dd>
+            Builds of this project may be executed only on any Windows agent that has
+            version 9 of the Java Development Kit installed (assuming that agents
+            with JDK 9 installed have been given a <tt>jdk9</tt> label)
+        </dd>
+
+        <dt><tt>postgres &amp;&amp; !vm &amp;&amp; (linux || freebsd)</tt></dt>
+        <dd>
+            Builds of this project may be executed only any on Linux or FreeBSD agent,
+            so long as they are <i>not</i> a virtual machine, and they have PostgreSQL
+            installed (assuming that each agent has the appropriate labels — in
+            particular, each agent running in a virtual machine must have the
+            <tt>vm</tt> label in order for this example to work as expected)
+        </dd>
+
+    </dl>
+</div>
